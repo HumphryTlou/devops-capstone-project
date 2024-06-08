@@ -1,5 +1,3 @@
-BASE_URL = "/accounts"
-
 """
 Account Service
 
