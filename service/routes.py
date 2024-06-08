@@ -3,13 +3,12 @@ Account Service
 
 This microservice handles the lifecycle of Accounts
 """
-
-from flask import jsonify, request, make_response, abort, url_for
+# pylint: disable=unused-import
+from flask import jsonify, request, make_response, abort, url_for   # noqa; F401
 from service.models import Account
 from service.common import status  # HTTP Status Codes
 from . import app  # Import Flask application
 
-# pylint: disable=unused-import
 
 ############################################################
 # Health Endpoint
@@ -30,7 +29,7 @@ def index():
         jsonify(
             name="Account REST API Service",
             version="1.0",
-            paths=url_for("list_accounts", _external=True),
+            # paths=url_for("list_accounts", _external=True),
         ),
         status.HTTP_200_OK,
     )
@@ -43,7 +42,7 @@ def index():
 def create_accounts():
     """
     Creates an Account
-    This endpoint will create an Account based on the data in the body that is posted
+    This endpoint will create an Account based the data in the body that is posted
     """
     app.logger.info("Request to create an Account")
     check_content_type("application/json")
@@ -52,11 +51,12 @@ def create_accounts():
     account.create()
     message = account.serialize()
     # Uncomment once get_accounts has been implemented
-    location_url = url_for("get_accounts", account_id=account.id, _external=True)
-    # location_url = "/"  # Remove once get_accounts has been implemented
+    # location_url = url_for("get_accounts", account_id=account.id, _external=True)
+    location_url = "/"  # Remove once get_accounts has been implemented
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
+
 
 ######################################################################
 # LIST ALL ACCOUNTS
@@ -75,14 +75,15 @@ def list_accounts():
     app.logger.info("Returning [%s] accounts", len(account_list))
     return jsonify(account_list), status.HTTP_200_OK
 
+
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
 @app.route("/accounts/<int:account_id>", methods=["GET"])
-def read_accounts(account_id):
+def get_accounts(account_id):
     """
     Reads an Account
-    This endpoint will read an Account based on the account_id that is requested
+    This endpoint will read an Account based the account_id that is requested
     """
     app.logger.info("Request to read an Account with id: %s", account_id)
 
@@ -92,10 +93,6 @@ def read_accounts(account_id):
 
     return account.serialize(), status.HTTP_200_OK
 
-def test_read_account_not_found(self):
-    """It should not Read an Account that is not found"""
-    resp = self.client.get(f"{BASE_URL}/0")
-    self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
